@@ -24,10 +24,8 @@ class TestChangePasswordViews:
         payload = {
             "email": "mail@mail.com",
             "password": old_password,
-            "fcm_token": "",
-            "is_mobile_platform": False,
         }
-        url = reverse("v1:login-list")
+        url = reverse("v1:token_obtain_pair")
         response = self.client.post(url, payload)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data["detail"] == ErrorCodes.INCORRECT_LOGIN_CREDENTIALS.value

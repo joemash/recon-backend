@@ -13,4 +13,3 @@ def create_test_user(
     user.set_password(password)
     user.save()
     return user
-

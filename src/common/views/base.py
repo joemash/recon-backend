@@ -14,4 +14,4 @@ class BaseViewSet(viewsets.ModelViewSet):
 
 class BypassJWTAuthentication(BaseAuthentication):
     def authenticate(self, request):
-        return None  
+        return None

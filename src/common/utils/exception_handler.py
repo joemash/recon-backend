@@ -15,7 +15,7 @@ from django.db.utils import (
 )
 from django.http import Http404
 from rest_framework import status
-from rest_framework.exceptions import MethodNotAllowed, NotAuthenticated, ParseError
+from rest_framework.exceptions import AuthenticationFailed, MethodNotAllowed, NotAuthenticated, ParseError
 from rest_framework.exceptions import PermissionDenied as DRFPermissionDenied
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.response import Response
@@ -92,7 +92,11 @@ def custom_exception_handler(exc, context):
 
     if isinstance(exc, InvalidToken):
         data = {"detail": "Token is invalid or expired"}
-        return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+    if isinstance(exc, AuthenticationFailed):
+        data = {"detail": str(exc)}
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     if isinstance(exc, jwt.ExpiredSignatureError):
         data = {"detail": "The invitation token has expired"}
