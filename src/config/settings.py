@@ -1,14 +1,10 @@
-import logging
 import json
 import os
 import secrets
 from datetime import timedelta
 from os.path import join
 
-import sentry_sdk
 from corsheaders.defaults import default_headers
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -41,7 +37,6 @@ INSTALLED_APPS = (
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django.contrib.sites",
     # Third party apps
@@ -64,7 +59,6 @@ INSTALLED_APPS = (
 # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
 MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -110,7 +104,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 
@@ -181,26 +175,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# TODO! to update the below sentry details
-sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.INFO)
-dsn_link = ""
-dsn_link_empty = ""
-sentry_sdk.init(
-    dsn=dsn_link_empty,
-    integrations=[DjangoIntegration(), sentry_logging],
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production,
-    traces_sample_rate=1.0,
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-    # By default the SDK will try to use the SENTRY_RELEASE
-    # environment variable, or infer a git commit
-    # SHA as release, however you may want to set
-    # something more human-readable.
-    # release="myapp@1.0.0",
-)
 
 # Logging
 LOGGING = {
@@ -236,11 +210,6 @@ LOGGING = {
             "level": "ERROR",
             "class": "django.utils.log.AdminEmailHandler",
         },
-        "sentry": {
-            "level": "ERROR",  # To capture more than ERROR, change to WARNING, INFO, etc. # noqa
-            "class": "raven.contrib.django.raven_compat.handlers.SentryHandler",  # noqa
-            "tags": {"custom-tag": "x"},
-        },
     },
     "loggers": {
         "django": {
@@ -263,16 +232,6 @@ LOGGING = {
         "django.db.backends": {
             "handlers": ["console"],
             "level": "INFO",
-        },
-        "raven": {
-            "level": "DEBUG",
-            "handlers": ["console"],
-            "propagate": False,
-        },
-        "sentry.errors": {
-            "level": "DEBUG",
-            "handlers": ["console"],
-            "propagate": False,
         },
     },
 }
@@ -346,17 +305,6 @@ CORS_ALLOW_HEADERS = default_headers
 # email settings
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "admin@recon.co.ke")
 
-# celery settings
-CELERY_BROKER_URL = os.getenv("BROKER_URL", "amqp://guest:guest@localhost:5672/")
-CELERY_RESULT_BACKEND = "rpc://"
-CELERY_TASK_SERIALIZER = "json"
-CELERY_TASK_RESULT_EXPIRES = int(os.getenv("CELERY_TASK_RESULT_EXPIRES", 300))
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_DEFAULT_QUEUE = os.getenv("CELERY_QUEUE", "recon_queue")
-CELERY_DEFAULT_EXCHANGE = CELERY_DEFAULT_QUEUE
-CELERY_DEFAULT_ROUTING_KEY = CELERY_DEFAULT_QUEUE
-SOFT_TIME_DELAY = 60 * 5
-
 SECRET_KEY = os.getenv("SECRET_KEY", secrets.token_urlsafe(32))
 
 SIMPLE_JWT = {
@@ -378,6 +326,3 @@ DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
     "CLASS": "django_rest_passwordreset.tokens.RandomNumberTokenGenerator",
     "OPTIONS": {"min_number": 1500, "max_number": 9999},
 }
-
-
-SITE_CLIENT_DOMAIN = os.getenv("SITE_CLIENT_DOMAIN", "http://localhost:3000")
