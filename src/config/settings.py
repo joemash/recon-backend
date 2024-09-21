@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     # custom apps
     "src.common",
     "src.account",
+    "src.recon",
 )
 
 # https://docs.djangoproject.com/en/2.0/topics/http/middleware/

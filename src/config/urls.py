@@ -12,11 +12,13 @@ from src.account.urls import (
     password_router,
     user_router,
 )
+from src.recon.urls import recon_router
 from src.account.views.token import CustomTokenRefreshView
 
 v1_urls = [
     path("token/refresh/", CustomTokenRefreshView.as_view(), name="token_refresh"),
     path("user/", include(user_router.urls)),
+    path("reconciliation/", include(recon_router.urls)),
     path("password/", include(password_router.urls)),
 ]
 
