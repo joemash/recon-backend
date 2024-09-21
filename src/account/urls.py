@@ -8,11 +8,8 @@ from src.account.views.change_password import ChangePasswordViewSet
 from src.account.views.login import LoginViewSet
 from src.account.views.register import RegisterUserViewSet
 
-from src.account.views.user import UserViewSet
-
 
 user_router = DefaultRouter()
-user_router.register(r"users", UserViewSet)
 user_router.register(r"register", RegisterUserViewSet, basename="register")
 user_router.register(r"login", LoginViewSet, basename="login")
 user_router.register(

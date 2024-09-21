@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from src.common.utils.helpers import format_error_response
 from src.common.views.base import BaseViewSet
-from src.recon.models import ReconciliationResult
+from src.recon.models import ReconciiationStatuses, ReconciliationResult
 from src.recon.serializers import (
     ReconciliationResponseSerializer,
     ReconciliationSerializer,
@@ -47,11 +47,13 @@ class ReconciliationViewSet(BaseViewSet):
             return Response(data, status=status_code)
 
         attachment.result = result
+        attachment.status = ReconciiationStatuses.PROCESSED
         attachment.save()
 
         data = {
             "id": attachment.id,
             "created": attachment.created_at,
+            "status": attachment.status.capitalize(),
             "results": result
         }
         serializer_response = ReconciliationResponseSerializer(data)

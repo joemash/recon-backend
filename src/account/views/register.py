@@ -8,11 +8,14 @@ from src.account.serializers.signup import (
 )
 from src.account.usecases.register import register_user
 from src.common.utils.helpers import format_error_response
+from src.common.views.base import BypassJWTAuthentication
 
 
 class RegisterUserViewSet(viewsets.ViewSet):
     serializer_class = RegistrationSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [BypassJWTAuthentication]
+    http_method_names = ["post", "options"]
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)

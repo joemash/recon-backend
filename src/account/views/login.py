@@ -7,6 +7,7 @@ from src.account.serializers.login import LoginSerializer
 from src.account.serializers.token import UserLoginResponseSerializer
 from src.account.usecases.login import authenticate_user
 from src.common.utils.helpers import format_error_response
+from src.common.views.base import BypassJWTAuthentication
 
 UserModel = get_user_model()
 
@@ -14,6 +15,8 @@ UserModel = get_user_model()
 class LoginViewSet(viewsets.ViewSet):
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [BypassJWTAuthentication]
+    http_method_names = ["post", "options"]
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)

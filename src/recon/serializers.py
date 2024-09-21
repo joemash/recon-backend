@@ -6,6 +6,12 @@ from src.recon.models import ReconciliationResult
 
 
 class ReconciliationSerializer(BaseModelSerializer):
+    created_at = serializers.DateTimeField(format="%Y-%m-%d")
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return obj.status.capitalize()
+
     class Meta:
         model = ReconciliationResult
         exclude = [
