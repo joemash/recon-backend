@@ -24,7 +24,7 @@ v1_urls = [
 
 
 urlpatterns = [
-    path("api/v1/", include((v1_urls, "v1"), namespace="v1")),
+    path("v1/", include((v1_urls, "v1"), namespace="v1")),
     path("admin/", admin.site.urls),
     # API docs UI:
     path(

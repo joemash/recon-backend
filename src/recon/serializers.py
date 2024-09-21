@@ -1,12 +1,36 @@
 import magic
 from rest_framework import serializers
 
+from src.common.serializers.common import BaseModelSerializer
+from src.recon.models import ReconciliationResult
 
-class ReconciliationResponseSerializer(serializers.Serializer):
+
+class ReconciliationSerializer(BaseModelSerializer):
+    class Meta:
+        model = ReconciliationResult
+        exclude = [
+            "created",
+            "updated",
+            "active",
+            "created_by",
+            "updated_by",
+            "deleted_at",
+            "source_file",
+            "target_file",
+        ]
+
+
+class ReconciliationResultSerializer(serializers.Serializer):
     reconciled = serializers.ListField(child=serializers.DictField())
     missing_in_target = serializers.ListField(child=serializers.DictField())
     missing_in_source = serializers.ListField(child=serializers.DictField())
     discrepancies = serializers.ListField(child=serializers.DictField())
+
+
+class ReconciliationResponseSerializer(serializers.Serializer):
+    id = serializers.UUIDField(required=True)
+    created = serializers.DateTimeField(required=True, format="%Y-%m-%d")
+    results = ReconciliationResultSerializer()
 
 
 def validate_csv(data):

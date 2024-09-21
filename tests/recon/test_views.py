@@ -45,7 +45,7 @@ def test_reconcile_view(client, source_file, target_file):
     )
     assert response.status_code == status.HTTP_201_CREATED
     assert ReconciliationResult.objects.count() == 1
-    assert response.data == {
+    assert response.data["results"] == {
         "reconciled": [
             {
                 "source": {

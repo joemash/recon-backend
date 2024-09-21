@@ -8,6 +8,7 @@ from src.common.views.base import BaseViewSet
 from src.recon.models import ReconciliationResult
 from src.recon.serializers import (
     ReconciliationResponseSerializer,
+    ReconciliationSerializer,
     ReconciliationUploadSerializer,
 )
 from src.recon.utils import CSVReconciler
@@ -15,12 +16,12 @@ from src.recon.utils import CSVReconciler
 
 class ReconciliationViewSet(BaseViewSet):
     queryset = ReconciliationResult.objects.all()
-    serializer_class = ReconciliationResponseSerializer
-    http_method_names = ["post", "options"]
+    serializer_class = ReconciliationSerializer
+    http_method_names = ["get", "post", "options"]
 
     @transaction.atomic
     @action(detail=False, methods=["post"])
-    def reconcile(self, request, *args, **kwargs):
+    def reconcile(self, request):
         serializer = ReconciliationUploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
@@ -48,5 +49,10 @@ class ReconciliationViewSet(BaseViewSet):
         attachment.result = result
         attachment.save()
 
-        serializer_response = self.serializer_class(result)
+        data = {
+            "id": attachment.id,
+            "created": attachment.created_at,
+            "results": result
+        }
+        serializer_response = ReconciliationResponseSerializer(data)
         return Response(serializer_response.data, status=status.HTTP_201_CREATED)

@@ -14,10 +14,3 @@ def create_test_user(
     user.save()
     return user
 
-
-def assertListEqual(a, b):
-    assert len(a) == len(b) and sorted(a) == sorted(b)
-
-
-def sorted_dict_values(d):
-    return {k: sorted(v) for k, v in d.items()}

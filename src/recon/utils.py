@@ -131,7 +131,7 @@ class CSVReconciler:
         self,
         source_file: str,
         target_file: str,
-        file_reader: CSVFileReader = None,
+        file_reader: FileReader = None,
         reconciler: ReconciliationEngine = None,
     ):
         self.source_file = source_file
