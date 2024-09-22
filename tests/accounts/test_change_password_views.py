@@ -27,7 +27,7 @@ class TestChangePasswordViews:
         }
         url = reverse("v1:token_obtain_pair")
         response = self.client.post(url, payload)
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert response.data["detail"] == ErrorCodes.INCORRECT_LOGIN_CREDENTIALS.value
         # The new password should work
         payload.update({"password": new_password})

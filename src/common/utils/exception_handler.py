@@ -96,7 +96,7 @@ def custom_exception_handler(exc, context):
 
     if isinstance(exc, AuthenticationFailed):
         data = {"detail": str(exc)}
-        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
     if isinstance(exc, jwt.ExpiredSignatureError):
         data = {"detail": "The invitation token has expired"}

@@ -29,12 +29,11 @@ RUN set -ex \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV APP_DIR=/opt/ratiba
+ENV APP_DIR=/opt/recon
 WORKDIR $APP_DIR
 
 COPY . $APP_DIR
 
-RUN mkdir $APP_DIR/static
 RUN pip install  --no-cache-dir -r requirements/base.txt
 
 RUN sed -i 's/\r$//g' $APP_DIR/entrypoint.sh

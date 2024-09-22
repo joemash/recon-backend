@@ -47,7 +47,6 @@ setup(
         "drf-spectacular==0.27.2",
         "PyJWT==2.9.0",
         "django-storages==1.14.4",
-
     ],
     zip_safe=False,
 )

@@ -5,52 +5,79 @@ Supports file uploads and reconciliation processing.
 - [x] Authentication.
 - [x] Reconciliation.
 
-#### Installation
-- Setup  a virtual environment
-- Install dependencies
+#### Stack
+- Django
+- Django-restframework
+- Postgres
 
-     ```python
-     pip install -r requirements/base.txt
-     pip install -r requirements/tests.txt
-     ```
-- Create a file `env.sh` and paste the below contents, edit the values appropriately
+#### How to Run locally 🚀
+
+##### Docker Compose
+
+1. Build the image:
+
+   ```sh
+   $ docker compose build
+   ```
+
+2. Run the image:
+
+   ```sh
+   $ docker compose up --build
+   OR
+   $ docker-compose up -d
+   ```
+3. Visit API sandbox navigate to
+   ```sh
+   http://localhost:8000/api/docs/
+   ```
+
+##### Manual Setup
+
+1. Create and activate a virtual environment:
+
+   ```sh
+   $ python3 -m venv venv && source venv/bin/activate
+   ```
+
+2. Install the requirements:
+
+   ```sh
+   (venv) pip install -r requirements/base.txt
+   (venv) pip install -r requirements/tests.txt
+   ```
+
+###### NOTE! Ensure a `DATABASE_NAME` is created with a `DATABASE_USER` that has a `CREATEDB` role
+
+3. Create a file `env.sh` and paste the below contents, edit the values appropriately
     ```bash
-    export DATABASE_NAME="<database_name>"
-    export DATABASE_USER="<database_user"
-    export DATABASE_PASSWORD="<database_pass>"
-    export DATABASE_HOST="<database_host>"
-    export DATABASE_PORT="<database_port>"
-    export SECRET_KEY="<SECRET_KEY"
+    export DATABASE_NAME=recon_db
+    export DATABASE_USER=recon_user
+    export DATABASE_PASSWORD=recon_pass
+    export DATABASE_HOST=localhost
+    export DATABASE_PORT=5432
+    export SECRET_KEY="SECRET_KEY"
     export DJANGO_DEBUG=True
   ```
-- Create database 
-   - Type `chmod +x  local_setup.sh`
-   - Run `sh local_setup.sh`
 
-- Create superuser
-    ```
-    python manage.py createsuperuser
-    ```
-- Run server
-   ```python 
-     python manage.py runserver --noreload
+4. Source the environment variables
+   ```sh
+   (venv)$ source env.sh
    ```
-- Visit `http://localhost:8000` OR `http://localhost:8000/admin` 
+5. Create database
+    ```sh
+      (venv)$  chmod +x local_setup.sh
+      (venv)$  sh local_setup.sh
+   ```
+6. Run the applicatiom
+   ```sh
+   (venv)$ python manage.py runserver --noreload
+   ```
 
-### Checkout API docs
-- Visit `http://localhost:8000/docs/`
 
-### Running tests coverage
- ```tox -r```
+#### Running tests coverage
+ ```sh
+  (venv)$ tox -r
+ ```
 
-### Running background tasks [celery]
-#### Workers
-run worker in a separate terminal as
-```
-celery -A src.config worker -l info
-```
-#### Periodic tasks 
-run beat on a separate terminal as:
-  ```
-  celery -A src.config beat -l info
-  ```
+###### Crafted with ❤️ by Macharia Kariuki
