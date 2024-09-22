@@ -123,7 +123,7 @@ class TestCustomExceptionHandlerTestCase(APITestCase):
         exc = InvalidToken("Token is invalid or expired")
         context = {"view": "API view"}
         response = custom_exception_handler(exc, context)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(
             response.data,
             {"detail": "Token is invalid or expired"},

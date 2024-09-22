@@ -92,7 +92,7 @@ def custom_exception_handler(exc, context):
 
     if isinstance(exc, InvalidToken):
         data = {"detail": "Token is invalid or expired"}
-        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
     if isinstance(exc, AuthenticationFailed):
         data = {"detail": str(exc)}
